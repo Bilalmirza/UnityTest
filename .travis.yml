@@ -1,29 +1,41 @@
-language: objective-c
-osx_image: xcode11.2
+language: generic
 
-env:
-- TRAVIS_TAG="Deploy-2018.4.17f1" PROJECT_NAME="UnityTest" DEPLOY_UNITYPACKAGE="path set in deploy script"
+os: osx
+osx_image: xcode10
 
+rvm:
+- 2.1.2
+
+branches:
+  only:
+  - beta
+
+notifications:
+  email:
+    on_success: never
+    on_failure: change
 
 cache:
   directories:
-    - $UNITY_DOWNLOAD_CACHE
+  - unity_download_cache
 
-    
 before_install:
-- chmod a+x ./travisBuild/*.sh
+  - chmod -R a+rw ./unity_download_cache
+  - openssl enc -aes-256-cbc -a -d -in setup_ssh.sh.enc -out ./Scripts/setup_ssh.sh -k ${ENCRYPTION_KEY}
+  - chmod +x ./Scripts/setup_ssh.sh
+  - . ./Scripts/setup_ssh.sh
+  - bundle install
 
 install:
-- cat /etc/hosts
-- ./travisBuild/install-unity.sh
+  - . ./Scripts/install.sh
 
+script:
+  - . ./Scripts/build.sh
 
-
-deploy:
-  provider: releases
-  api_key: $GITHUB_TOKEN
-  file: $DEPLOY_UNITYPACKAGE
-  skip_cleanup: true
-  overwrite: true
-  on:
-    tags: true 
+env:
+  global:
+  - UNITY_NOPROXY="localhost,127.0.0.1"
+  - UNITY_DOWNLOAD_CACHE="${TRAVIS_BUILD_DIR}/unity_download_cache"
+  - UNITY_PROJECT_NAME="UnityProject"
+  - BUILD_PATH="${TRAVIS_BUILD_DIR}/Builds"
+  - DELIVER_ITMSTRANSPORTER_ADDITIONAL_UPLOAD_PARAMETERS="-t DAV"
