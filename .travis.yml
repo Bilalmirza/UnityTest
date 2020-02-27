@@ -1,10 +1,10 @@
 language: objective-c
-osx_image: xcode9.2
+osx_image: xcode11.2
 rvm:
 - 2.2         #see before_install for getting RVM stable.
 
 env:
-- TRAVIS_TAG="Deploy-2017.2.0f3" PROJECT_NAME="UnityExamplePackage" UNITY_PROJECT_PATH="UnityExample" DEPLOY_UNITYPACKAGE="path set in deploy script"
+- TRAVIS_TAG="Deploy-2018.4.17f1" PROJECT_NAME="UnityTest" DEPLOY_UNITYPACKAGE="path set in deploy script"
 
 
 cache:
@@ -17,17 +17,9 @@ before_install:
 
 install:
 - cat /etc/hosts
-- ./travis-build/install-unity.sh
+- sudo install="https://download.unity3d.com/download_unity/46dda1414e51/MacEditorInstaller/Unity-2018.4.17f1.pkg"
 
-script:
-- ./travis-build/build.sh
-- ./travis-build/run-tests.sh
 
-after_success:
-- ./travis-build/export-unity-package.sh
-
-before_deploy:
-- DEPLOY_UNITYPACKAGE="$(ls -a release/*.zip | head -n 1)"
 
 deploy:
   provider: releases
