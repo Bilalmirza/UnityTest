@@ -23,6 +23,9 @@ script:
 - ./travis-build/build.sh
 - ./travis-build/run-tests.sh
 - ./travis-build/export-unity-package.sh
+- git clone https://github.com/andreafabrizi/Dropbox-Uploader.git
+- echo "OAUTH_ACCESS_TOKEN=vp0TyqCJLF0AAAAAAAACLF4EpS8qwQa23nhKzYqhdow0ekBQ4j67HfdRHjDsf8ox" > .dropbox_uploader
+ - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./Dropbox-Uploader/dropbox_uploader.sh -f .dropbox_uploader upload ./release/UnityExamplePackage-vDeploy-2017.2.0f3.zip ./release/UnityExamplePackage-vDeploy-2017.2.0f3.zip;fi
 
 before_deploy:
 - DEPLOY_UNITYPACKAGE="$(ls -a release/*.zip | head -n 1)"
