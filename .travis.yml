@@ -15,7 +15,7 @@ before_install:
 
 install:
 - cat /etc/hosts
-- ./travis-build/install-unity.sh
+- ./travisBuild/install-unity.sh
 
 
 
